@@ -156,7 +156,8 @@ public class UsbSerialActivity extends BaseActivity {
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
         while (deviceIterator.hasNext()) {
             UsbDevice device = deviceIterator.next();
-            customTable.addProduct(device.getVendorId(), device.getProductId(), CdcAcmSerialDriver.class);
+            if (device.getManufacturerName().contains("arduino"))
+                customTable.addProduct(device.getVendorId(), device.getProductId(), CdcAcmSerialDriver.class);
         }
 
         return customTable;

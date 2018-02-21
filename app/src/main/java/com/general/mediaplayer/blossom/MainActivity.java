@@ -25,16 +25,14 @@ public class MainActivity extends UsbSerialActivity {
             @Override
             public void iconOnClick(int position, boolean check) {
 
-                if (check){
-                    switch (position)
-                    {
-                        case 0:
-                            sendCommand("A");
-                            break;
-                        case 1:
-                            sendCommand("B");
-                            break;
-                    }
+                switch (position)
+                {
+                    case 0:
+                        sendCommand("A");
+                        break;
+                    case 1:
+                        sendCommand("B");
+                        break;
                 }
 
             }
