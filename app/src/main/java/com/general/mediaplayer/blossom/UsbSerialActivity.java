@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class UsbSerialActivity extends BaseActivity {
@@ -57,8 +60,7 @@ public class UsbSerialActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(mUsbReceiver, filter);
 
-        ProbeTable customTable = new ProbeTable();
-        customTable.addProduct(0x2a03, 0x0043, CdcAcmSerialDriver.class);
+        ProbeTable customTable = getDetail();
         UsbSerialProber prober = new UsbSerialProber(customTable);
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
@@ -143,6 +145,21 @@ public class UsbSerialActivity extends BaseActivity {
                 Log.e(TAG, "write error: " + e.getMessage());
             }
         }
+    }
+
+    public ProbeTable getDetail() {
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        ProbeTable customTable = new ProbeTable();
+        //customTable.addProduct(0x2a03, 0x0043, CdcAcmSerialDriver.class);
+        UsbSerialProber prober = new UsbSerialProber(customTable);
+        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        while (deviceIterator.hasNext()) {
+            UsbDevice device = deviceIterator.next();
+            customTable.addProduct(device.getVendorId(), device.getProductId(), CdcAcmSerialDriver.class);
+        }
+
+        return customTable;
     }
 
 }

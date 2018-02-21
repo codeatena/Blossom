@@ -30,4 +30,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation project(':usbSerialForAndroid')
 
+    compile 'uk.co.alt236:usbdeviceenumerator:2.0.0'
+
 }
